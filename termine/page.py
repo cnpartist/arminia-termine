@@ -88,7 +88,7 @@ ol {
 }
 li {
   display: grid;
-  grid-template-columns: 300px 150px 1fr;
+  grid-template-columns: 230px 170px 1fr;
   align-items: center;
   min-width: 0;
   border-bottom: 4px solid var(--blue);
