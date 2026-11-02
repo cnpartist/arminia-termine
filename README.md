@@ -1,0 +1,62 @@
+# Arminia Tischfußball – Termine display
+
+The upcoming events from the
+[Terminliste on arminia.de](https://www.arminia.de/tischfussball/termine/terminliste)
+as a 1920×1080 image in the website's look, for the screens in the club rooms.
+It's set as the desktop background (and optionally the screensaver) of the
+club PC, so the dates show whenever no window covers the screen.
+
+- Image: <https://cnpartist.github.io/arminia-termine/termine.png>
+- Full-screen page: <https://cnpartist.github.io/arminia-termine/>
+
+The image is rebuilt every hour by GitHub Actions. If arminia.de is down or its
+page layout changes, the build fails, the last good image stays online, and
+GitHub emails the repo owner.
+
+## Club PC (Windows)
+
+Open PowerShell (no admin rights needed) and run:
+
+```powershell
+irm https://cnpartist.github.io/arminia-termine/setup.ps1 | iex
+```
+
+This saves `update.ps1` to `%LOCALAPPDATA%\ArminiaTermine` and creates the
+scheduled task **Arminia Termine Hintergrund**. The task runs at logon and
+every hour, downloads the image to `Bilder\Arminia Termine\termine.png`, and
+sets it as the background on all screens. When the PC is offline, the last
+image stays.
+
+**Screensaver (optional):** setup opens the screensaver settings. Pick
+"Fotos", then under "Einstellungen…" choose the folder `Bilder\Arminia Termine`.
+
+**Remove:**
+
+```powershell
+irm https://cnpartist.github.io/arminia-termine/uninstall.ps1 | iex
+```
+
+## How it works
+
+| File | Job |
+|---|---|
+| `termine/parse.py` | Reads date, time and title of each event from the Terminliste HTML |
+| `termine/select.py` | Keeps events from today on, soonest first, at most 8 |
+| `termine/assets.py` | Finds the site's fonts (Compacta, Gill Sans) and the crest |
+| `termine/page.py` | The 1920×1080 display page |
+| `build.py` | Fetches everything, screenshots the page with headless Chrome into `site/` |
+| `static/index.html` | Full-screen viewer for the image, reloads every 10 minutes |
+| `windows/*.ps1` | Setup, hourly update and uninstall on the club PC |
+
+The fonts are licensed. They're downloaded from arminia.de while the image is
+drawn and are never stored in this repo or published. If they can't be loaded,
+the image falls back to Arial.
+
+## Local build
+
+Needs Python 3.11+ and Chrome, Chromium or Brave (or set `CHROME=/path/to/browser`).
+
+```sh
+python3 -m unittest discover -s tests
+python3 build.py --out site        # writes site/termine.png
+```
