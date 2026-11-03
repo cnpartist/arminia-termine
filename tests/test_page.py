@@ -6,7 +6,8 @@ from termine.page import render_html
 from termine.parse import Event
 
 NOW = datetime(2026, 11, 2, 23, 45)
-FIRST = Event(datetime(2026, 11, 6, 20, 0), True, "Turnier: Offenes Doppel - Mini-Challenger")
+FIRST = Event(datetime(2026, 11, 6, 20, 0), True, "Turnier: Offenes Doppel - Mini-Challenger",
+              "Turnier: Offenes Doppel- Mini-Challenger - Einlass: 19:30, Start: 20:00")
 
 
 def text_of(html: str) -> str:
@@ -15,9 +16,34 @@ def text_of(html: str) -> str:
 
 
 class RenderHtmlTest(unittest.TestCase):
-    def test_event_row_shows_weekday_date_time_title(self):
+    def test_event_row_shows_weekday_date_time_cleaned_title_and_description(self):
         visible = text_of(render_html([FIRST], NOW))
-        self.assertIn("Fr 06.11. 20:00 Turnier: Offenes Doppel - Mini-Challenger", visible)
+        self.assertIn("Fr 06.11. 20:00 Offenes Doppel Offenes Doppel - Einlass: 19:30, Start: 20:00", visible)
+        self.assertNotIn("Turnier:", visible)
+        self.assertNotIn("Mini", visible)
+
+    def test_header_reads_termine_without_blue_bar(self):
+        html = render_html([FIRST], NOW)
+        self.assertRegex(html, r"<h1>Termine</h1>")
+        self.assertNotIn('class="bar"', html)
+        self.assertNotIn("Tischfußball", text_of(html))
+
+    def test_description_is_second_line_in_light_gill_sans(self):
+        html = render_html([FIRST], NOW)
+        self.assertRegex(html, r'<span class="title">Offenes Doppel</span><span class="desc">')
+        rule = re.search(r"\.desc\s*\{([^}]*)\}", html).group(1)
+        self.assertIn("font-weight: 300", rule)
+        self.assertNotIn("uppercase", rule)
+        for prop in ("display: block", "white-space: nowrap", "overflow: hidden", "text-overflow: ellipsis"):
+            self.assertIn(prop, rule)
+
+    def test_description_is_html_escaped(self):
+        html = render_html([Event(datetime(2026, 11, 6, 20), True, "X", "A & <B>")], NOW)
+        self.assertIn("A &amp; &lt;B&gt;", html)
+
+    def test_event_without_description_has_no_second_line(self):
+        html = render_html([Event(datetime(2026, 11, 6, 20), True, "X")], NOW)
+        self.assertNotIn('class="desc"', html)
 
     def test_title_is_html_escaped(self):
         html = render_html([Event(datetime(2026, 11, 6, 20), True, "Foo & <Bar>")], NOW)

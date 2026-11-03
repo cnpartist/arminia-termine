@@ -4,6 +4,7 @@ from datetime import datetime
 from html import escape
 from string import Template
 
+from termine.clean import clean
 from termine.parse import Event
 
 WEEKDAYS = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
@@ -58,24 +59,11 @@ h1 {
   line-height: 1;
   text-transform: uppercase;
 }
-.bar {
-  flex: none;
-  margin-top: 28px;
-  height: 76px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--blue);
-  font-family: var(--display);
-  font-size: 60px;
-  text-transform: uppercase;
-  letter-spacing: .02em;
-}
 .box {
   flex: 1;
   min-height: 0;
+  margin-top: 28px;
   border: 1px solid var(--blue);
-  border-top: none;
   padding: 6px 48px;
 }
 ol {
@@ -102,11 +90,25 @@ li:last-child { border-bottom: none; }
   white-space: nowrap;
 }
 .time { color: var(--grey); }
+.text { min-width: 0; }
 .title {
+  display: block;
   font-weight: 700;
   font-size: 38px;
+  line-height: 1.15;
   letter-spacing: .025em;
   text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.desc {
+  display: block;
+  margin-top: 2px;
+  font-weight: 300;
+  font-size: 30px;
+  line-height: 1.15;
+  letter-spacing: .1em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -134,8 +136,7 @@ footer {
 </head>
 <body>
 <div class="frame">
-  <header>$crest<h1>Tischfußball</h1></header>
-  <div class="bar">Termine</div>
+  <header>$crest<h1>Termine</h1></header>
   <div class="box"><ol>
 $rows
   </ol></div>
@@ -150,10 +151,12 @@ def _row(event: Event) -> str:
     start = event.start
     when = f"{WEEKDAYS[start.weekday()]} {start:%d.%m.}"
     time = f"{start:%H:%M}" if event.has_time else ""
+    desc = (f'<span class="desc">{escape(clean(event.description))}</span>'
+            if event.description else "")
     return (
         f'    <li><span class="when">{when}</span>'
         f'<span class="time">{time}</span>'
-        f'<span class="title">{escape(event.title)}</span></li>'
+        f'<span class="text"><span class="title">{escape(clean(event.title))}</span>{desc}</span></li>'
     )
 
 

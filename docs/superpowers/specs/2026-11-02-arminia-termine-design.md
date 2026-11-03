@@ -25,9 +25,13 @@ Decisions made with Markus:
 PNG, 1920×1080, styled like arminia.de (black background, white text,
 club blue `#005b9d`, the site's fonts Compacta and Gill Sans, the crest):
 
-- Header: crest, "Tischfußball", blue bar "Termine"
-- Up to 8 upcoming events, each: weekday + date, time, title as on the website
-  (rows separated by 4px blue rules, like the site)
+- Header: crest and "Termine" in Compacta (changed 2026-11-03 at Markus's
+  request; first version had "Tischfußball" and a blue bar "Termine")
+- Up to 8 upcoming events, each: weekday + date, time, the title in bold
+  uppercase Gill Sans and, on a second line, the website's description in
+  light Gill Sans (as on the site). Both drop a leading "Turnier:" and any
+  "- Mini-Challenger" (2026-11-03, Markus's request). Rows are separated by
+  4px blue rules, like the site.
 - Footer: "Stand: <weekday> <date>, <time>" (Europe/Berlin) and
   "arminia.de/tischfussball"
 - No upcoming events → "Zurzeit keine Termine"
@@ -42,7 +46,7 @@ its whole day.
 ```
 GitHub Actions (hourly cron, on push, manual)
   build.py
-    fetch Terminliste HTML ──► parse.py ──► [Event(start, has_time, title)]
+    fetch Terminliste HTML ──► parse.py ──► [Event(start, has_time, title, description)]
     fetch site CSS + crest ──► assets.py ──► @font-face CSS (woff2 only), crest data URI
     page.py: events + now + assets ──► display HTML (fonts inline, never published)
     headless Chrome screenshot ──► site/termine.png

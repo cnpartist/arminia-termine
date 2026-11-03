@@ -40,7 +40,8 @@ irm https://cnpartist.github.io/arminia-termine/uninstall.ps1 | iex
 
 | File | Job |
 |---|---|
-| `termine/parse.py` | Reads date, time and title of each event from the Terminliste HTML |
+| `termine/parse.py` | Reads date, time, title and description of each event from the Terminliste HTML |
+| `termine/clean.py` | Drops "Turnier:" and "- Mini-Challenger" from titles and descriptions |
 | `termine/select.py` | Keeps events from today on, soonest first, at most 8 |
 | `termine/assets.py` | Finds the site's fonts (Compacta, Gill Sans) and the crest |
 | `termine/page.py` | The 1920×1080 display page |
