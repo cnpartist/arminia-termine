@@ -9,7 +9,8 @@ club PC, so the dates show whenever no window covers the screen.
 - Image: <https://cnpartist.github.io/arminia-termine/termine.png>
 - Full-screen page: <https://cnpartist.github.io/arminia-termine/>
 
-The image is rebuilt every hour by GitHub Actions. If arminia.de is down or its
+The image is rebuilt every day at 18:00 and 3:00 (German time) by GitHub
+Actions; events that have already started are left out. If arminia.de is down or its
 page layout changes, the build fails, the last good image stays online, and
 GitHub emails the repo owner.
 
@@ -42,7 +43,7 @@ irm https://cnpartist.github.io/arminia-termine/uninstall.ps1 | iex
 |---|---|
 | `termine/parse.py` | Reads date, time, title and description of each event from the Terminliste HTML |
 | `termine/clean.py` | Drops "Turnier:" and "- Mini-Challenger"; drops title and date repeats from the description |
-| `termine/select.py` | Keeps events from today on, soonest first, at most 8 |
+| `termine/select.py` | Keeps events that haven't started yet (all-day ones for their whole day), soonest first, at most 8 |
 | `termine/assets.py` | Finds the site's fonts (Compacta, Gill Sans) and the crest |
 | `termine/page.py` | The 1920×1080 display page |
 | `build.py` | Fetches everything, screenshots the page with headless Chrome into `site/` |

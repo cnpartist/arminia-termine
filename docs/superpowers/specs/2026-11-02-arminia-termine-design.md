@@ -43,13 +43,15 @@ club blue `#005b9d`, the site's fonts Compacta and Gill Sans, the crest):
 - Layout keeps clear of the Windows taskbar (bottom ~80px) and desktop icons
   (left edge), since it's a desktop background.
 
-Events dated before today (Berlin time) are dropped; an event stays visible for
-its whole day.
+Events that have started by build time (Berlin time) are dropped; an event
+without a time stays for its whole day. The image is built daily at 18:00 and,
+to clear the previous evening's events, at 3:00 (2026-11-03, Markus's request;
+it was hourly before).
 
 ## Architecture
 
 ```
-GitHub Actions (hourly cron, on push, manual)
+GitHub Actions (daily 18:00 and 3:00 Europe/Berlin, on push, manual)
   build.py
     fetch Terminliste HTML ──► parse.py ──► [Event(start, has_time, title, description)]
     fetch site CSS + crest ──► assets.py ──► @font-face CSS (woff2 only), crest data URI
