@@ -59,24 +59,19 @@ h1 {
   line-height: 1;
   text-transform: uppercase;
 }
-.box {
+/* No frame around the list: the dates line up with the crest's left edge. */
+ol {
   flex: 1;
   min-height: 0;
-  margin-top: 28px;
-  border: 1px solid var(--blue);
-  padding: 6px 48px;
-}
-ol {
   list-style: none;
-  margin: 0;
+  margin: 20px 0 0;
   padding: 0;
-  height: 100%;
   display: grid;
   grid-template-rows: repeat(8, 1fr);
 }
 li {
   display: grid;
-  grid-template-columns: 230px 170px 1fr;
+  grid-template-columns: 250px 190px 1fr;
   align-items: center;
   min-width: 0;
   border-bottom: 4px solid var(--blue);
@@ -84,7 +79,7 @@ li {
 li:last-child { border-bottom: none; }
 .when, .time {
   font-family: var(--display);
-  font-size: 72px;
+  font-size: 80px;
   line-height: 1;
   padding-top: .06em;
   white-space: nowrap;
@@ -94,8 +89,8 @@ li:last-child { border-bottom: none; }
 .title {
   display: block;
   font-weight: 700;
-  font-size: 38px;
-  line-height: 1.15;
+  font-size: 42px;
+  line-height: 1.12;
   letter-spacing: .025em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -106,8 +101,8 @@ li:last-child { border-bottom: none; }
   display: block;
   margin-top: 2px;
   font-weight: 300;
-  font-size: 30px;
-  line-height: 1.15;
+  font-size: 33px;
+  line-height: 1.12;
   letter-spacing: .1em;
   white-space: nowrap;
   overflow: hidden;
@@ -137,9 +132,9 @@ footer {
 <body>
 <div class="frame">
   <header>$crest<h1>Termine</h1></header>
-  <div class="box"><ol>
+  <ol>
 $rows
-  </ol></div>
+  </ol>
 </div>
 <footer><span>Stand: $stand</span><span>arminia.de/tischfussball</span></footer>
 </body>
