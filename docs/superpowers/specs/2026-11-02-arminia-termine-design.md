@@ -30,8 +30,11 @@ club blue `#005b9d`, the site's fonts Compacta and Gill Sans, the crest):
 - Up to 8 upcoming events, each: weekday + date, time, the title in bold
   uppercase Gill Sans and, on a second line, the website's description in
   light Gill Sans (as on the site). Both drop a leading "Turnier:" and any
-  "- Mini-Challenger" (2026-11-03, Markus's request). Rows are separated by
-  4px blue rules, like the site.
+  "- Mini-Challenger" (2026-11-03, Markus's request). The second line also
+  drops what the row already shows: the event's own date at its start and the
+  title at its start or end (punctuation and case ignored); if under two words
+  are left after dropping the title, the second line is left out. Rows are
+  separated by 4px blue rules, like the site.
 - Footer: "Stand: <weekday> <date>, <time>" (Europe/Berlin) and
   "arminia.de/tischfussball"
 - No upcoming events → "Zurzeit keine Termine"

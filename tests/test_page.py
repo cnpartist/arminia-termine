@@ -18,7 +18,7 @@ def text_of(html: str) -> str:
 class RenderHtmlTest(unittest.TestCase):
     def test_event_row_shows_weekday_date_time_cleaned_title_and_description(self):
         visible = text_of(render_html([FIRST], NOW))
-        self.assertIn("Fr 06.11. 20:00 Offenes Doppel Offenes Doppel - Einlass: 19:30, Start: 20:00", visible)
+        self.assertIn("Fr 06.11. 20:00 Offenes Doppel Einlass: 19:30, Start: 20:00", visible)
         self.assertNotIn("Turnier:", visible)
         self.assertNotIn("Mini", visible)
 
@@ -40,6 +40,11 @@ class RenderHtmlTest(unittest.TestCase):
     def test_description_is_html_escaped(self):
         html = render_html([Event(datetime(2026, 11, 6, 20), True, "X", "A & <B>")], NOW)
         self.assertIn("A &amp; &lt;B&gt;", html)
+
+    def test_description_that_only_repeats_the_title_has_no_second_line(self):
+        html = render_html([Event(datetime(2026, 11, 21, 10), True, "Kickerturnier für Kids und Teens",
+                                  "21.11. - Offenes Kickerturnier für Kids und Teens")], NOW)
+        self.assertNotIn('class="desc"', html)
 
     def test_event_without_description_has_no_second_line(self):
         html = render_html([Event(datetime(2026, 11, 6, 20), True, "X")], NOW)

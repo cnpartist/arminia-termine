@@ -4,7 +4,7 @@ from datetime import datetime
 from html import escape
 from string import Template
 
-from termine.clean import clean
+from termine.clean import clean, short_description
 from termine.parse import Event
 
 WEEKDAYS = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"]
@@ -151,12 +151,13 @@ def _row(event: Event) -> str:
     start = event.start
     when = f"{WEEKDAYS[start.weekday()]} {start:%d.%m.}"
     time = f"{start:%H:%M}" if event.has_time else ""
-    desc = (f'<span class="desc">{escape(clean(event.description))}</span>'
-            if event.description else "")
+    title = clean(event.title)
+    description = short_description(clean(event.description), title, start.date())
+    desc = f'<span class="desc">{escape(description)}</span>' if description else ""
     return (
         f'    <li><span class="when">{when}</span>'
         f'<span class="time">{time}</span>'
-        f'<span class="text"><span class="title">{escape(clean(event.title))}</span>{desc}</span></li>'
+        f'<span class="text"><span class="title">{escape(title)}</span>{desc}</span></li>'
     )
 
 
