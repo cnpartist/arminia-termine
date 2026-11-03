@@ -122,7 +122,7 @@ def png_size(path: Path) -> tuple[int, int]:
 def build(out: Path, html: str) -> None:
     events = parse_events(html)
     now = datetime.now(TZ).replace(tzinfo=None)
-    shown = upcoming(events, now.date())
+    shown = upcoming(events, now)
     fonts, crest = load_assets(html)
     page = render_html(shown, now, fonts, crest)
 
