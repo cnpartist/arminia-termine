@@ -64,7 +64,7 @@ ol {
   flex: 1;
   min-height: 0;
   list-style: none;
-  margin: 20px 0 0;
+  margin: 40px 0 0;
   padding: 0;
   display: grid;
   grid-template-rows: repeat(8, 1fr);
