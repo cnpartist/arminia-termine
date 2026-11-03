@@ -44,11 +44,24 @@ jobs:
   keepalive:
     # GitHub switches off scheduled workflows in public repos after 60 days
     # without activity. Re-enabling the workflow through the API resets that.
+    # Only done when neither a commit nor an earlier re-enable happened in the
+    # last 45 days: re-enabling every hour seemed to stall the schedule (no
+    # scheduled run for hours after the 2026-11-03 15:00 UTC re-enable).
     if: github.event_name == 'schedule'
     runs-on: ubuntu-latest
     permissions:
       actions: write
+      contents: read
     steps:
-      - run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/build.yml/enable"
+      - run: |
+          repo="repos/${{ github.repository }}"
+          last_commit=$(gh api "$repo/commits?per_page=1" --jq '.[0].commit.committer.date')
+          last_enable=$(gh api "$repo/actions/workflows/build.yml" --jq '.updated_at')
+          cutoff=$(date -u -d '45 days ago' +%s)
+          echo "last commit $last_commit, workflow last updated $last_enable"
+          if [ "$(date -u -d "$last_commit" +%s)" -lt "$cutoff" ] && [ "$(date -u -d "$last_enable" +%s)" -lt "$cutoff" ]; then
+            gh api -X PUT "$repo/actions/workflows/build.yml/enable"
+            echo "re-enabled the schedule"
+          fi
         env:
           GH_TOKEN: ${{ github.token }}

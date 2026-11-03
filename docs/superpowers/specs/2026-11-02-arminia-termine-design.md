@@ -34,7 +34,9 @@ club blue `#005b9d`, the site's fonts Compacta and Gill Sans, the crest):
   drops what the row already shows: the event's own date at its start and the
   title at its start or end (punctuation and case ignored); if under two words
   are left after dropping the title, the second line is left out. Rows are
-  separated by 4px blue rules, like the site.
+  separated by 4px blue rules, like the site. No frame around the list: the
+  dates line up with the crest's left edge (2026-11-03, Markus's request, along
+  with slightly bigger text).
 - Footer: "Stand: <weekday> <date>, <time>" (Europe/Berlin) and
   "arminia.de/tischfussball"
 - No upcoming events → "Zurzeit keine Termine"
@@ -96,7 +98,9 @@ a slightly-off font beats stale dates. Same for the crest: missing → no crest.
 - Club PC offline / download fails / file isn't a PNG → keep the current image,
   exit quietly.
 - Public repos disable scheduled workflows after 60 days without activity: the
-  workflow re-enables itself via the API on each scheduled run (keepalive).
+  workflow re-enables itself via the API (keepalive), but only when neither a
+  commit nor a re-enable happened in the last 45 days. Re-enabling it every
+  hour seemed to stall the schedule (2026-11-03).
 
 ## Club PC details
 
