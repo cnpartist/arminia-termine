@@ -44,14 +44,16 @@ club blue `#005b9d`, the site's fonts Compacta and Gill Sans, the crest):
   (left edge), since it's a desktop background.
 
 Events that have started by build time (Berlin time) are dropped; an event
-without a time stays for its whole day. The image is built daily at 18:00 and,
-to clear the previous evening's events, at 3:00 (2026-11-03, Markus's request;
-it was hourly before).
+without a time stays for its whole day. The image is built daily at 6:00 (clears
+the previous evening's events) and 18:00 (2026-11-04, Markus's request; it was
+hourly before). GitHub's schedule fired only once in the first 24 hours, so a
+systemd timer on Markus's always-on Linux server (`server/`) starts the same
+builds through workflow_dispatch; GitHub's schedule stays as a backup.
 
 ## Architecture
 
 ```
-GitHub Actions (daily 18:00 and 3:00 Europe/Berlin, on push, manual)
+GitHub Actions (daily 6:00 and 18:00 Europe/Berlin via server timer + schedule, on push, manual)
   build.py
     fetch Terminliste HTML ──► parse.py ──► [Event(start, has_time, title, description)]
     fetch site CSS + crest ──► assets.py ──► @font-face CSS (woff2 only), crest data URI

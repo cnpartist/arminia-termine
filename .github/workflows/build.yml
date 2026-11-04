@@ -2,9 +2,12 @@ name: Build display image
 
 on:
   schedule:
-    - cron: "0 18 * * *"  # daily at 18:00 German time
+    # Daily at 6:00 (drops the previous evening's events) and 18:00 German time.
+    # GitHub fires these unreliably for this repo, so server/*.timer also starts
+    # the build at the same times via workflow_dispatch.
+    - cron: "0 6 * * *"
       timezone: "Europe/Berlin"
-    - cron: "0 3 * * *"   # at night, so the previous evening's events go away
+    - cron: "0 18 * * *"
       timezone: "Europe/Berlin"
   push:
     branches: [main]
@@ -50,7 +53,7 @@ jobs:
     # Only done when neither a commit nor an earlier re-enable happened in the
     # last 45 days: re-enabling every hour seemed to stall the schedule (no
     # scheduled run for hours after the 2026-11-03 15:00 UTC re-enable).
-    if: github.event_name == 'schedule'
+    if: github.event_name != 'push'  # schedule, or workflow_dispatch from the server timer
     runs-on: ubuntu-latest
     permissions:
       actions: write

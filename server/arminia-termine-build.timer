@@ -1,0 +1,12 @@
+# Daily at 6:00 and 18:00 German time. The 6:00 build drops the previous
+# evening's events; the 18:00 build is fresh for the evening. Persistent= makes
+# up for a start missed while the machine was off.
+[Unit]
+Description=Arminia Termine image build at 6:00 and 18:00
+
+[Timer]
+OnCalendar=*-*-* 06,18:00:00 Europe/Berlin
+Persistent=true
+
+[Install]
+WantedBy=timers.target

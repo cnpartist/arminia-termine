@@ -1,0 +1,19 @@
+# Starts the "Build display image" workflow on GitHub (workflow_dispatch).
+# GitHub's own schedule fires unreliably for this repo, so a Linux box that's
+# always on starts the builds. Installed as a systemd user unit (see README
+# "Build timer"); started by arminia-termine-build.timer. Needs `gh` logged in
+# with the `workflow` scope.
+[Unit]
+Description=Start the Arminia Termine image build on GitHub
+Wants=network-online.target
+After=network-online.target
+# Retry a failed start (e.g. network down) every 10 minutes, at most 6 times.
+StartLimitIntervalSec=2h
+StartLimitBurst=6
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/gh workflow run build.yml --repo cnpartist/arminia-termine
+Restart=on-failure
+RestartSec=10min
+TimeoutStartSec=2min

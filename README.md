@@ -9,10 +9,11 @@ club PC, so the dates show whenever no window covers the screen.
 - Image: <https://cnpartist.github.io/arminia-termine/termine.png>
 - Full-screen page: <https://cnpartist.github.io/arminia-termine/>
 
-The image is rebuilt every day at 18:00 and 3:00 (German time) by GitHub
-Actions; events that have already started are left out. If arminia.de is down or its
-page layout changes, the build fails, the last good image stays online, and
-GitHub emails the repo owner.
+The image is rebuilt by GitHub Actions every day at 6:00 and 18:00 (German
+time), on every push, and from the Actions tab ("Run workflow"). Events that
+have already started are left out. If arminia.de is down or its page layout
+changes, the build fails, the last good image stays online, and GitHub emails
+the repo owner.
 
 ## Club PC (Windows)
 
@@ -49,10 +50,28 @@ irm https://cnpartist.github.io/arminia-termine/uninstall.ps1 | iex
 | `build.py` | Fetches everything, screenshots the page with headless Chrome into `site/` |
 | `static/index.html` | Full-screen viewer for the image, reloads every 10 minutes |
 | `windows/*.ps1` | Setup, hourly update and uninstall on the club PC |
+| `server/*` | systemd timer that starts the build at 6:00 and 18:00 |
 
 The fonts are licensed. They're downloaded from arminia.de while the image is
 drawn and are never stored in this repo or published. If they can't be loaded,
 the image falls back to Arial.
+
+## Build timer
+
+GitHub's own schedule fires unreliably for this repo, so a Linux machine that's
+always on starts the 6:00 and 18:00 builds with a systemd user timer
+(`server/`). GitHub's schedule stays in the workflow as a backup. Needs `gh`
+logged in with the `workflow` scope:
+
+```sh
+cp server/arminia-termine-build.* ~/.config/systemd/user/
+systemctl --user daemon-reload
+systemctl --user enable --now arminia-termine-build.timer
+loginctl enable-linger "$USER"   # keep user timers running while logged out
+```
+
+`systemctl --user list-timers` shows the next start;
+`systemctl --user start arminia-termine-build.service` builds right away.
 
 ## Local build
 
